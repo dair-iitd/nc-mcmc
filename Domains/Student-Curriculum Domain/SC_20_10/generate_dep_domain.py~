@@ -1,0 +1,83 @@
+from sys import argv
+import random
+
+num = int(argv[1])
+k= int(argv[2])
+out = open(argv[3], 'w')
+
+evidence=[None]*(num+1)
+for i in range(1,num+1):
+	r = random.random()
+	if(r<0.1):#float(argv[3])):
+		evidence[i]=1
+	else:
+		evidence[i]=0
+
+
+first_var_set=False
+temp_str="Vars:"
+for i in range(1, num+1):
+	if(evidence[i]==0):
+		if(first_var_set):
+			temp_str+=","
+		temp_str+=str(i)
+		first_var_set=True
+
+for i in range(1,num+1):
+	for j in range(1,num+1):
+		if((evidence[i]==0) and evidence[j]==0):
+			temp_str+=",F("+str(i)+"-"+str(j)+")"
+out.write(temp_str)
+out.write('\n\n')
+	
+
+p=5
+
+for i in range(0, num/k):
+	courses=[None]*(p+1)
+	courses[random.randint(1,p)] = 1
+
+	for x in range(1,p+1):
+		if(random.random()<0.5):
+			courses[x]=1
+	for j in range(1,k+1):
+		if(evidence[i*k+j]==0):
+			out.write(str(i*k+j))
+
+			temp_str = '=0,'
+			for x in range(1,p+1):
+				if(courses[x]):
+					temp_str += str(x)+','
+			out.write(temp_str[:-1])
+			out.write('\n')
+#out.write("\n")
+
+for i in range(1,num+1):
+	for j in range(1,num+1):
+		if((evidence[i]==0) and evidence[j]==0):
+			out.write("F("+str(i)+"-"+str(j)+")=0,1\n")
+out.write('\n')
+for i in range(1,num+1):
+	for j in range(1,num+1):
+		if((evidence[i]==0) and evidence[j]==0) and (i!=j):
+			out.write("1.3\t"+str(j)+" 0,"+str(i)+" 0,"+ "F("+str(i)+"-"+str(j)+") 1\n")
+#out.write('\n')
+	
+for i in range(1, num+1):
+	if evidence[i]==0:
+		out.write("1.9\t" + str(i) + " 0\n");
+
+out.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
